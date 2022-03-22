@@ -12,8 +12,13 @@ void initSystem();
 void printOnConsole(String msg);
 
 /**
+ * Lights off all the leds.
+ */
+void turnOffLeds();
+
+/**
  * Fades in and out a led repeatedly.
  */
-void fadeLed(int ledPosition);
+void fadeLed(int pinLed);
 
 #endif
