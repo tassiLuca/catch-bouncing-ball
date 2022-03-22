@@ -21,4 +21,10 @@ void turnOffLeds();
  */
 void fadeLed(int pinLed);
 
+/** 
+ *  Returns the number of the button pressed or -1 if 
+ *  no button have been pressed.
+ */
+bool isButtonPressed();
+
 #endif
