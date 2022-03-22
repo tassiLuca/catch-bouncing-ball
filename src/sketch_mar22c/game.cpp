@@ -24,7 +24,7 @@ void gameReady() {
     unsigned long now = millis();
     if (now - reference > TIMEOUT_READY) {
         gameStatus = SLEEP;
-    } else if (isButtonPressed() == 0) {
+    } else if (isButtonPressed() == 0) { // T1 has been pressed
         gameStatus = PLAY;
     } else {
         fadeLed(LS_PIN);

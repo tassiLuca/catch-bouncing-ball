@@ -11,6 +11,7 @@ static int buttonsState[] = {LOW, LOW, LOW, LOW, LOW};
 static int brightness = 0;
 static int fadeAmount = 5;
 
+// TODO: manage balance problem
 void buttonPressed(int buttonPressed) {
     buttonsState[buttonPressed] = HIGH;
     printOnConsole("Stato " + buttonsState[buttonPressed]);
@@ -69,6 +70,7 @@ bool isButtonPressed() {
     // In this way if there have been multiple pressions and a check 
     // has not been performed this function returns only the first pression!
     for (int i = 0; i < BUTTONS_LEN; i++) {
+        // TODO: disable interrupts to avoid race conditions!
         if (buttonsState[i] == HIGH) {
             buttonsState[i] = LOW;
             return i;
