@@ -24,9 +24,16 @@ void gameReady() {
     unsigned long now = millis();
     if (now - reference > TIMEOUT_READY) {
         gameStatus = SLEEP;
+    } else if (isButtonPressed() == 0) {
+        gameStatus = PLAY;
     } else {
         fadeLed(LS_PIN);
     }
+}
+
+void gamePlay() {
+    turnOffLeds();
+    Serial.println("PLAY!");
 }
 
 void sleep() {
