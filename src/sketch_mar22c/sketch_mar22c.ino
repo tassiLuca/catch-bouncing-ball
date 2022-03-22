@@ -1,9 +1,23 @@
-void setup() {
-    // put your setup code here, to run once:
+#include "setup.h"
+#include "input.h"
+#include "game.h"
 
+extern GameStatus gameStatus;
+
+void setup() {
+    initSystem();
+    gameStatus = SETUP;
 }
 
 void loop() {
-    // put your main code here, to run repeatedly:
-
+    switch(gameStatus){
+        case SETUP:
+            welcome();
+            break;
+        case READY:
+            gameReady();
+            break;
+        default:
+            break;
+    }
 }
