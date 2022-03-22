@@ -1,5 +1,5 @@
-#ifndef SETUP_H
-#define SETUP_H
+#ifndef __SETUP_H__
+#define __SETUP_H__
 
 #define L1_PIN 0
 #define L2_PIN 1
