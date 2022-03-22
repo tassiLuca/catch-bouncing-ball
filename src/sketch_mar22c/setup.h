@@ -1,11 +1,11 @@
 #ifndef __SETUP_H__
 #define __SETUP_H__
 
-#define L1_PIN 0
-#define L2_PIN 1
-#define L3_PIN 2
-#define L4_PIN 3
-#define LS_PIN 4
+#define L1_PIN 2
+#define L2_PIN 3
+#define L3_PIN 4
+#define L4_PIN 5
+#define LS_PIN 6
 
 #define POT_PIN A0
 #define T1_PIN 8
