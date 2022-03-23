@@ -14,7 +14,6 @@ static int fadeAmount = 5;
 // TODO: manage balance problem
 void buttonPressed(int buttonPressed) {
     buttonsState[buttonPressed] = HIGH;
-    printOnConsole("Stato " + buttonsState[buttonPressed]);
 }
 
 void T1Pressed() {
