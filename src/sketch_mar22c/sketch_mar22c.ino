@@ -17,6 +17,9 @@ void loop() {
         case READY:
             gameReady();
             break;
+        case BLINK:
+            gameBlink();
+            break;
         case PLAY:
             gamePlay();
             break;
