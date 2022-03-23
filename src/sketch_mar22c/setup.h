@@ -13,4 +13,10 @@
 #define T3_PIN 10
 #define T4_PIN 11
 
+extern int buttons[];
+extern int leds[];
+// sizeof doesn't work TODO
+#define BUTTONS_LEN 4
+#define LEDS_LEN 5
+
 #endif

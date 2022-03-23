@@ -26,6 +26,9 @@ void loop() {
         case SLEEP:
             sleep();
             break;
+        case OVER:
+            gameOver();
+            break;
         default:
             break;
     }

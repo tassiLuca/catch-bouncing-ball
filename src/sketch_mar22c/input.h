@@ -17,6 +17,16 @@ void printOnConsole(String msg);
 void turnOffLeds();
 
 /**
+ * Turns on the led attached to the pin given in input.
+ */
+void turnOnLed(int pinLed);
+
+/**
+ * Turns off the led attached to the pin given in input.
+ */
+void turnOffLed(int pinLed);
+
+/**
  * Fades in and out a led repeatedly.
  */
 void fadeLed(int pinLed);
@@ -25,6 +35,6 @@ void fadeLed(int pinLed);
  *  Returns the number of the button pressed or -1 if 
  *  no button have been pressed.
  */
-bool isButtonPressed();
+int isButtonPressed();
 
 #endif

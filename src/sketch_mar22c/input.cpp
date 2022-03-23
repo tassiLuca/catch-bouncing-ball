@@ -4,16 +4,25 @@
 #include "setup.h"
 #include "input.h"
 
-#define BUTTONS_LEN (sizeof(buttons) / sizeof(buttons[0]))
-int buttons[] = {L1_PIN, L2_PIN, L3_PIN, L4_PIN, LS_PIN};
-static int buttonsState[] = {LOW, LOW, LOW, LOW, LOW};
+#define BOUNCING_TIME 200
 
-static int brightness = 0;
-static int fadeAmount = 5;
+int buttons[] = {T1_PIN, T2_PIN, T3_PIN, T4_PIN};
+int leds[] = {L1_PIN, L2_PIN, L3_PIN, L4_PIN, LS_PIN};
 
-// TODO: manage balance problem
-void buttonPressed(int buttonPressed) {
-    buttonsState[buttonPressed] = HIGH;
+static int pressedBtn = -1;
+/** An array in which in the i-th position there is the last 
+ *  time the i-th button was toggled.
+ */
+static unsigned long lastDebounceTime[BUTTONS_LEN] = {0};
+
+// TODO: flag to disable interrupts when not needed
+void buttonPressed(int btn) {
+    unsigned long now = millis();
+    if (now - lastDebounceTime[btn] > BOUNCING_TIME) {
+        printOnConsole("Button pressed: " + String(btn));
+        pressedBtn = btn;
+        lastDebounceTime[btn] = now;
+    }
 }
 
 void T1Pressed() {
@@ -38,6 +47,10 @@ void initSystem() {
     pinMode(T2_PIN, INPUT_PULLUP);
     pinMode(T3_PIN, INPUT_PULLUP);
     pinMode(T4_PIN, INPUT_PULLUP);
+    pinMode(L1_PIN, OUTPUT);
+    pinMode(L2_PIN, OUTPUT);
+    pinMode(L3_PIN, OUTPUT);
+    pinMode(L4_PIN, OUTPUT);
     enableInterrupt(T1_PIN, T1Pressed, FALLING);
     enableInterrupt(T2_PIN, T2Pressed, FALLING);
     enableInterrupt(T3_PIN, T3Pressed, FALLING);
@@ -49,12 +62,21 @@ void printOnConsole(String msg) {
 }
 
 void turnOffLeds() {
-    for (int i = 0; i <= BUTTONS_LEN; i++) {
-        digitalWrite(buttons[i], LOW);
+    for (int i = 0; i < LEDS_LEN; i++) {
+        digitalWrite(leds[i], LOW);
     }
 }
 
+void turnOnLed(int pinLed) {
+    digitalWrite(pinLed, HIGH);
+}
+
+void turnOffLed(int pinLed) {
+    digitalWrite(pinLed, LOW);
+}
+
 void fadeLed(int pinLed){
+    static int brightness = 0, fadeAmount = 5;
     analogWrite(pinLed, brightness);
     brightness += fadeAmount;
     if (brightness == 0 || brightness == 255) {
@@ -64,16 +86,11 @@ void fadeLed(int pinLed){
     delay(5);
 }
 
-bool isButtonPressed() {
-    // **THEORETICALLY**
-    // In this way if there have been multiple pressions and a check 
-    // has not been performed this function returns only the first pression!
-    for (int i = 0; i < BUTTONS_LEN; i++) {
-        // TODO: disable interrupts to avoid race conditions!
-        if (buttonsState[i] == HIGH) {
-            buttonsState[i] = LOW;
-            return i;
-        }
-    }
-    return -1;
+int isButtonPressed() {
+    // TODO: comment
+    noInterrupts();
+    int tmp = pressedBtn;
+    pressedBtn = -1;
+    interrupts();
+    return tmp;
 }
