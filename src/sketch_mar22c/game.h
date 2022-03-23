@@ -4,6 +4,7 @@
 typedef enum {
     SETUP,
     READY,
+    BLINK,
     PLAY,
     SLEEP
 } GameStatus;
@@ -17,6 +18,8 @@ void welcome();
  * The game is ready to play.
  */
 void gameReady();
+
+void gameBlink();
 
 /**
  * The game starts!

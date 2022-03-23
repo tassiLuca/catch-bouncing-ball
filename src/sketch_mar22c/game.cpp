@@ -5,6 +5,8 @@
 
 #define TIMEOUT_READY 10000
 
+static int score = 0;
+
 GameStatus gameStatus;
 
 static String welcomeMsg = 
@@ -25,18 +27,22 @@ void gameReady() {
     if (now - reference > TIMEOUT_READY) {
         gameStatus = SLEEP;
     } else if (isButtonPressed() == 0) { // T1 has been pressed
-        gameStatus = PLAY;
+        gameStatus = BLINK;
+        printOnConsole("Go!");
     } else {
         fadeLed(LS_PIN);
     }
 }
 
+void gameBlink() {
+    turnOffLeds();
+}
+
 void gamePlay() {
     turnOffLeds();
-    Serial.println("PLAY!");
 }
 
 void sleep() {
     turnOffLeds();
-    Serial.println("SLEEP");
+    printOnConsole("Sleep!");
 }
