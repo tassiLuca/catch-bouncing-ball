@@ -13,7 +13,7 @@ static int score = 0;
 static const int t1 = 5000;
 static int t2 = 10000;
 static int S = 1000;
-static int F = 2;
+static int F = 1.5;
 
 /** timers variables */
 static unsigned long referenceBlink;
@@ -50,9 +50,9 @@ void gameReady() {
 }
 
 void updateDirection() {
-    if (ballPosition + ballDirection == LEDS_LEN - 1) {
+    if (ballPosition + ballDirection >= LEDS_LEN - 1) {
         ballDirection = LEFT;
-    } else if (ballPosition + ballDirection == 0) {
+    } else if (ballPosition + ballDirection < 0) {
         ballDirection = RIGHT;
     }
 }
@@ -73,20 +73,21 @@ void gameBlink() {
     }
 }
 
+static void updateGameParameters() {
+    score += 1;
+    t2 = max(t2 / F, 30);
+    S = max(S - 150, 30); 
+    ballPosition = 0;
+    ballDirection = RIGHT;
+}
+
 void gamePlay() {
     long btnPressed = isButtonPressed();
     if (millis() - referencePlay <= t2) {
         if (btnPressed == ballPosition) {
-            score += 1;
             printOnConsole("> New point! Score:" + String(score));
-            ballPosition = 0;
-            ballDirection = RIGHT;
             turnOffLeds();
-
-            // params
-            t2 = t2 / F;
-            S -= 100;
-
+            updateGameParameters();
             gameStatus = BLINK;
             referenceBlink = millis();
             referenceBlinkLed = millis();
@@ -94,7 +95,6 @@ void gamePlay() {
             gameStatus = OVER;
         }
     } else {
-        Serial.println("Timeout");
         gameStatus = OVER;
     }
 }
