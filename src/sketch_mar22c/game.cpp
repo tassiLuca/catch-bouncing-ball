@@ -82,7 +82,7 @@ void gameReady() {
     } else {
         fadeLed(LS_PIN);
         level = map(readPotentiometer(POT_PIN), 0, 1023, 1, LEVELS);
-        printOnConsole("Level: " + String(level));
+        //printOnConsole("Level: " + String(level));
     }
 }
 

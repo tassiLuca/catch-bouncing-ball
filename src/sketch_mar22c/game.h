@@ -1,6 +1,9 @@
 #ifndef __GAME_H__
 #define __GAME_H__
 
+/**
+ * 
+ */
 typedef enum {
     SETUP,
     READY,
@@ -24,6 +27,7 @@ void welcome();
  * The game is ready to play.
  */
 void gameReady();
+
 
 void gameBlink();
 

@@ -24,47 +24,37 @@ static int pressedBtn = -1;
  */
 static unsigned long lastDebounceTime[BUTTONS_LEN] = {0};
 
+/**
+ * Buttons handler routing activated from the buttons interrupt.
+ */
 // TODO: flag to disable in soft way interrupts when not needed or disable it via detachInterrupt(): 
 // see [https://www.arduino.cc/reference/it/language/functions/external-interrupts/detachinterrupt/]
-void buttonPressed(int btn) {
-    unsigned long now = millis();
-    if (now - lastDebounceTime[btn] > BOUNCING_TIME) {
+static void buttonPressed() {
+    for (int i = 0; i < BUTTONS_LEN; i++) {
+        if (digitalRead(buttons[i]) == LOW) {
+            unsigned long now = millis();
+            if (now - lastDebounceTime[i] > BOUNCING_TIME) {
+                pressedBtn = i;
+                lastDebounceTime[i] = now;
 #ifdef DBG
-        printOnConsole("Button pressed: " + String(btn));
+                printOnConsole("Button pressed: " + String(i));
 #endif
-        pressedBtn = btn;
-        lastDebounceTime[btn] = now;
+            }
+        }
     }
-}
-
-void T1Pressed() {
-    buttonPressed(0);    
-}
-
-void T2Pressed() {
-    buttonPressed(1);
-}
-
-void T3Pressed() {
-    buttonPressed(2);
-}
-
-void T4Pressed() {
-    buttonPressed(3);
 }
 
 void initSystem() {
     Serial.begin(9600);
+    // [NOTE] Keep in mind the pull-up means the pushbutton's logic is inverted:
+    //        it goes HIGH when it's open, and LOW when it's pressed.
     for (int i = 0; i < BUTTONS_LEN; i++) {
         pinMode(buttons[i], INPUT_PULLUP);
+        enableInterrupt(T1_PIN, buttonPressed, FALLING);
     }
     for (int i = 0; i < LEDS_LEN; i++) {
         pinMode(leds[i], OUTPUT);
     }
-    enableInterrupt(T1_PIN, T1Pressed, FALLING);
-    enableInterrupt(T2_PIN, T2Pressed, FALLING);
-    enableInterrupt(T3_PIN, T3Pressed, FALLING);
-    enableInterrupt(T4_PIN, T4Pressed, FALLING);
 #ifdef DBG
     printOnConsole(">>> ACTIVE THE DEBUG MODE: MAX LEVEL OF VERBOSITY <<<");
 #endif
@@ -100,12 +90,12 @@ void fadeLed(int pinLed) {
     if (brightness == 0 || brightness == 255) {
         fadeAmount = -fadeAmount;
     }
-    // Warning this function introduce a delay in the super loop!!
+    // Warning this function introduce a litte delay in the super loop!!
     delay(5);
 }
 
 int isButtonPressed() {
-    // TODO: comment
+    // [NOTE] To avoid race conditions disable interrupts.
     noInterrupts();
     int tmp = pressedBtn;
     pressedBtn = -1;
