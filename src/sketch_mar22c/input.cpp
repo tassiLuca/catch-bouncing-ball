@@ -1,4 +1,5 @@
 #include "Arduino.h"
+#define EI_ARDUINO_INTERRUPTED_PIN
 #include <EnableInterrupt.h>
 
 #include "setup.h"
@@ -24,23 +25,31 @@ static int pressedBtn = -1;
  */
 static unsigned long lastDebounceTime[BUTTONS_LEN] = {0};
 
+/** 
+ *  Returns the index in the array of the button pin given in input.
+ */
+static int getIndexOfButton(int btnPin) {
+    for (int i = 0; i < BUTTONS_LEN; i++) {
+        if (buttons[i] == btnPin) {
+            return i;        
+        }
+    }
+    return -1;
+}
+
 /**
  * Buttons handler routing activated from the buttons interrupt.
  */
 // TODO: flag to disable in soft way interrupts when not needed or disable it via detachInterrupt(): 
 // see [https://www.arduino.cc/reference/it/language/functions/external-interrupts/detachinterrupt/]
 static void buttonPressed() {
-    for (int i = 0; i < BUTTONS_LEN; i++) {
-        if (digitalRead(buttons[i]) == LOW) {
-            unsigned long now = millis();
-            if (now - lastDebounceTime[i] > BOUNCING_TIME) {
-                pressedBtn = i;
-                lastDebounceTime[i] = now;
+    pressedBtn = getIndexOfButton(arduinoInterruptedPin);
+    unsigned long now = millis();
+    if (pressedBtn != -1 && now - lastDebounceTime[pressedBtn] > BOUNCING_TIME) {
+        lastDebounceTime[pressedBtn] = now;
 #ifdef DBG
-                printOnConsole("Button pressed: " + String(i));
+        printOnConsole("Button pressed: " + String(pressedBtn));
 #endif
-            }
-        }
     }
 }
 
@@ -48,9 +57,10 @@ void initSystem() {
     Serial.begin(9600);
     // [NOTE] Keep in mind the pull-up means the pushbutton's logic is inverted:
     //        it goes HIGH when it's open, and LOW when it's pressed.
+    //        see [https://docs.arduino.cc/tutorials/generic/digital-input-pullup]
     for (int i = 0; i < BUTTONS_LEN; i++) {
         pinMode(buttons[i], INPUT_PULLUP);
-        enableInterrupt(T1_PIN, buttonPressed, FALLING);
+        enableInterrupt(buttons[i], buttonPressed, FALLING);
     }
     for (int i = 0; i < LEDS_LEN; i++) {
         pinMode(leds[i], OUTPUT);
