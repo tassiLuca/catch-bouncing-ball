@@ -1,6 +1,10 @@
 #ifndef __SETUP_H__
 #define __SETUP_H__
 
+// When the following is defined logging 
+// messages are print on the console line.
+#define DBG 1
+
 #define L1_PIN 2
 #define L2_PIN 3
 #define L3_PIN 4
@@ -15,11 +19,8 @@
 
 extern int buttons[];
 extern int leds[];
-// sizeof doesn't work TODO
+// TODO sizeof doesn't work
 #define BUTTONS_LEN 4
 #define LEDS_LEN 5
-
-// (Un)comment to print useful logs in Serial
-#define DBG 1
 
 #endif

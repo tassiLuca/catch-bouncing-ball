@@ -12,7 +12,7 @@ void initSystem();
 void printOnConsole(String msg);
 
 /**
- * Lights off all the leds.
+ * Turns off all the leds of the circuit.
  */
 void turnOffLeds();
 
@@ -27,7 +27,7 @@ void turnOnLed(int pinLed);
 void turnOffLed(int pinLed);
 
 /**
- * Fades in and out a led repeatedly.
+ * Fades in and out the led attached to the pin given in input.
  */
 void fadeLed(int pinLed);
 
@@ -37,6 +37,10 @@ void fadeLed(int pinLed);
  */
 int isButtonPressed();
 
+/**
+ * Returns a value in [0, 1023] corresponding to the analog
+ * read of the potentiometer attached to the pin given in input.
+ */
 int readPotentiometer(int pinPot);
 
 #endif
