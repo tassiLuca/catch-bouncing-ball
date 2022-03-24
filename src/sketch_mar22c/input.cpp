@@ -19,7 +19,9 @@ static unsigned long lastDebounceTime[BUTTONS_LEN] = {0};
 void buttonPressed(int btn) {
     unsigned long now = millis();
     if (now - lastDebounceTime[btn] > BOUNCING_TIME) {
+#ifdef DBG
         printOnConsole("Button pressed: " + String(btn));
+#endif
         pressedBtn = btn;
         lastDebounceTime[btn] = now;
     }

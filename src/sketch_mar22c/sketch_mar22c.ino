@@ -2,6 +2,9 @@
 #include "input.h"
 #include "game.h"
 
+// Uncomment to print useful logs in Serial
+// #define DBG
+
 extern GameStatus gameStatus;
 
 void setup() {
