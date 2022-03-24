@@ -4,48 +4,84 @@
 #include "input.h"
 
 #define TIMEOUT_READY 10000
+#define RAND_MIN 3
+#define RAND_MAX 15
+#define LEVELS 8
 
 /** Game parameters */
 GameStatus gameStatus;
-static BallDirection ballDirection = RIGHT;
-static int ballPosition = 0;
-static int score = 0;
-static const int t1 = 5000;
-static int t2 = 10000;
-static int S = 1000;
-static int F = 1.5;
+static BallDirection ballDirection;
+static int ballPosition;
+static int level;
+static int score;
+static int t1;
+static int t2;
+static int S;
+static float F;
 
 /** timers variables */
+static unsigned long referenceReady;
 static unsigned long referenceBlink;
 static unsigned long referenceBlinkLed;
 static unsigned long referencePlay;
 
-static String welcomeMsg = 
-    "************************************************ \n"
-    "Welcome to the Catch the Bouncing Led Ball Game. \n"
-    "Press Key T1 to Start. \n"
-    "************************************************ \n";
+static float mapfloat(long x, long in_min, long in_max, float out_min, float out_max)
+{
+  return (float)(x - in_min) * (out_max - out_min) / (float)(in_max - in_min) + out_min;
+}
+
+static void resetGameParameters() {
+    score = 0;
+    t1 = ((random() % RAND_MAX) + RAND_MIN) * 1000;
+    t2 = 10000;
+    S = 1000;
+    F = mapfloat(level, 1, LEVELS, 1.1, 3);
+    ballPosition = 0;
+    ballDirection = RIGHT;
+#ifdef DBG
+    printOnConsole("The difficulty level is " + String(level));
+    printOnConsole("The factor F is " + String(F));
+#endif
+}
+
+static void updateGameParameters() {
+    score += 1;
+    t1 = ((random() % RAND_MAX) + RAND_MIN) * 1000;
+    t2 = max(t2 / F, 30);
+    S = max(S - 150, 30); 
+#ifdef DBG
+    printOnConsole("The speed of the led is " + String(S));
+    printOnConsole("You have " + String(t2) + " ms to push a button");
+#endif
+    ballPosition = 0;
+    ballDirection = RIGHT;
+}
 
 void welcome() {
+    const String welcomeMsg = 
+        "************************************************ \n"
+        "Welcome to the Catch the Bouncing Led Ball Game. \n"
+        "Press Key T1 to Start. \n"
+        "************************************************ \n";
     turnOffLeds();
     printOnConsole(welcomeMsg);
     gameStatus = READY;
+    referenceReady = millis();
 }
 
 void gameReady() {
-    static unsigned long reference = millis(); // TO CHECK
-    unsigned long now = millis();
-    if (now - reference > TIMEOUT_READY) {
+    if (millis() - referenceReady > TIMEOUT_READY) {
         gameStatus = SLEEP;
     } else if (isButtonPressed() == 0) { // T1 has been pressed
         turnOffLeds();
         printOnConsole("Go!");
-                
         gameStatus = BLINK;
         referenceBlink = millis();
         referenceBlinkLed = millis();
+        resetGameParameters();
     } else {
         fadeLed(LS_PIN);
+        level = map(readPotentiometer(POT_PIN), 0, 1023, 1, LEVELS);
     }
 }
 
@@ -73,19 +109,12 @@ void gameBlink() {
     }
 }
 
-static void updateGameParameters() {
-    score += 1;
-    t2 = max(t2 / F, 30);
-    S = max(S - 150, 30); 
-    ballPosition = 0;
-    ballDirection = RIGHT;
-}
-
 void gamePlay() {
     long btnPressed = isButtonPressed();
+    // TODO: semplify ?
     if (millis() - referencePlay <= t2) {
         if (btnPressed == ballPosition) {
-            printOnConsole("> New point! Score:" + String(score));
+            printOnConsole("New point! Score:" + String(score));
             turnOffLeds();
             updateGameParameters();
             gameStatus = BLINK;
@@ -101,10 +130,13 @@ void gamePlay() {
 
 void sleep() {
     turnOffLeds();
+    // TODO
     printOnConsole("Sleep!");
 }
 
 void gameOver() {
     turnOffLeds();
-    printOnConsole("GAME OVER!");
+    printOnConsole("Game Over. Final Score: " + String(score));
+    delay(10000);   // TODO avoid magic numbers
+    gameStatus = SETUP;
 }
