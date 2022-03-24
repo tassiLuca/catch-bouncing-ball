@@ -5,10 +5,10 @@
 
 #define TIMEOUT_READY 10000
 #define RAND_MIN 3
-#define RAND_MAX 15
+#define RAND_MAX 10
 #define LEVELS 8
 
-/** Game parameters */
+/* Game parameters */
 GameStatus gameStatus;
 static BallDirection ballDirection;
 static int ballPosition;
@@ -19,7 +19,7 @@ static int t2;
 static int S;
 static float F;
 
-/** timers variables */
+/* Timers variables */
 static unsigned long referenceReady;
 static unsigned long referenceBlink;
 static unsigned long referenceBlinkLed;
@@ -72,7 +72,7 @@ void welcome() {
 void gameReady() {
     if (millis() - referenceReady > TIMEOUT_READY) {
         gameStatus = SLEEP;
-    } else if (isButtonPressed() == 0) { // T1 has been pressed
+    } else if (isButtonPressed() == 0) { // T1 has been pressed => TODO: improve
         turnOffLeds();
         printOnConsole("Go!");
         gameStatus = BLINK;
@@ -82,7 +82,7 @@ void gameReady() {
     } else {
         fadeLed(LS_PIN);
         level = map(readPotentiometer(POT_PIN), 0, 1023, 1, LEVELS);
-        //printOnConsole("Level: " + String(level));
+        //printOnConsole("Level: " + String(level));    // TODO: ASCII art
     }
 }
 
@@ -131,8 +131,9 @@ void gamePlay() {
 
 void sleep() {
     turnOffLeds();
-    // TODO
     printOnConsole("Sleep!");
+    deepSleepSystem();
+    gameStatus = SETUP;
 }
 
 void gameOver() {

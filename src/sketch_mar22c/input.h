@@ -43,4 +43,6 @@ int isButtonPressed();
  */
 int readPotentiometer(int pinPot);
 
+void deepSleepSystem();
+
 #endif

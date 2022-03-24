@@ -1,9 +1,13 @@
 #include "Arduino.h"
 #define EI_ARDUINO_INTERRUPTED_PIN
 #include <EnableInterrupt.h>
+#include <avr/sleep.h>
 
 #include "setup.h"
 #include "input.h"
+
+// TODO LIST
+// - rename this file and the header one in boundary.h/c
 
 /**
  * The debounce time. This value is hardware-dependent and must be 
@@ -111,4 +115,11 @@ int isButtonPressed() {
     pressedBtn = -1;
     interrupts();
     return tmp;
+}
+
+void deepSleepSystem() {
+    set_sleep_mode(SLEEP_MODE_PWR_DOWN);
+    sleep_enable();
+    sleep_mode();
+    sleep_disable();
 }
