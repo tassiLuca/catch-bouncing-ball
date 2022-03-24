@@ -7,7 +7,7 @@
 #define BOUNCING_TIME 200
 
 int buttons[] = {T1_PIN, T2_PIN, T3_PIN, T4_PIN};
-int leds[] = {L1_PIN, L2_PIN, L3_PIN, L4_PIN, LS_PIN};
+int leds[]    = {L1_PIN, L2_PIN, L3_PIN, L4_PIN, LS_PIN};
 
 static int pressedBtn = -1;
 /** An array in which in the i-th position there is the last 
@@ -57,10 +57,18 @@ void initSystem() {
     enableInterrupt(T2_PIN, T2Pressed, FALLING);
     enableInterrupt(T3_PIN, T3Pressed, FALLING);
     enableInterrupt(T4_PIN, T4Pressed, FALLING);
+#ifdef DBG
+    printOnConsole(">>> ACTIVE THE DEBUG MODE: MAX LEVEL OF VERBOSITY <<<");
+#endif
+}
+
+int readPotentiometer(int pinPot) {
+    return analogRead(pinPot);
 }
 
 void printOnConsole(String msg) {
     Serial.println(msg);
+    Serial.flush();
 }
 
 void turnOffLeds() {

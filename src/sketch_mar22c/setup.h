@@ -19,4 +19,7 @@ extern int leds[];
 #define BUTTONS_LEN 4
 #define LEDS_LEN 5
 
+// (Un)comment to print useful logs in Serial
+#define DBG 1
+
 #endif

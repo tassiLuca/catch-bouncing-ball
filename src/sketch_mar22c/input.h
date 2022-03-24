@@ -37,4 +37,6 @@ void fadeLed(int pinLed);
  */
 int isButtonPressed();
 
+int readPotentiometer(int pinPot);
+
 #endif
