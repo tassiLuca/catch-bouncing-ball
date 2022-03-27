@@ -53,7 +53,7 @@ static void updateGameParameters() {
         F = mapfloat(level, 1, LEVELS, 1.1, 3);
     }
 #ifdef DBG
-    printOnConsole("You have " + String(t2) + "msecs");
+    printOnConsole("You have " + String(t2) + "ms to push the button");
 #endif
 }
 
@@ -115,9 +115,9 @@ void gamePlay() {
     if (millis() - referencePlay > t2 || (btnPressed != -1 && btnPressed != ballPosition)) {
         gameStatus = OVER;
     } else if (btnPressed == ballPosition) {
+        updateGameParameters();
         printOnConsole("New point! Score:" + String(score));
         turnOffLeds();
-        updateGameParameters();
         gameStatus = BLINK;
         referenceBlink = millis();
         referenceBlinkLed = millis();
