@@ -44,8 +44,6 @@ static int getIndexOfButton(int btnPin) {
 /**
  * Buttons handler routing activated from the buttons interrupt.
  */
-// TODO: flag to disable in soft way interrupts when not needed or disable it via detachInterrupt(): 
-// see [https://www.arduino.cc/reference/it/language/functions/external-interrupts/detachinterrupt/]
 static void buttonPressed() {
     int btnIdx = getIndexOfButton(arduinoInterruptedPin);
     unsigned long now = millis();
