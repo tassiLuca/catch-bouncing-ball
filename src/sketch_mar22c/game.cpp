@@ -13,6 +13,13 @@
 /**  The number of levels difficulties. */
 #define LEVELS 8
 
+#define STARTING_BALL_POS 0
+#define MIN_BALL_SPEED 30
+#define MIN_REDUCE_FACTOR 1.1
+#define MAX_REDUCE_FACTOR 3.0
+#define DEFAULT_BALL_SPEED 1000
+#define DEFAULT_T2 10000
+
 #define WELCOME_MSG "************************************************ \n" \
                     "Welcome to the Catch the Bouncing Led Ball Game. \n" \
                     "Press Key T1 to Start. \n"                           \
@@ -27,7 +34,7 @@ typedef enum {
 GameStatus gameStatus;
 /** The current direction of the ball towards which it is moving. */
 static BallDirection ballDirection;
-/** The speed of the ball. */
+/** The speed of the ball (actually, the time in which each led remains on). */
 static int ballSpeed;
 /** The current position of the ball (actually, the led ton which is on). */
 static int ballPosition;
@@ -35,13 +42,13 @@ static int ballPosition;
 static int level;
 /** The actual game score. */
 static int score;
-/** The amount of time in which the ball moves repeatedly back and forth. */
+/** The amount of time, in ms, in which the ball moves repeatedly back and forth. */
 static int t1;
-/** The amount of time within which the user must press 
+/** The amount of time, in ms, within which the user must press 
  *  a button before the game ends. */
 static int t2;
 /** The factor to reduce T2 for each turn of play. */
-static float F;
+static float reduceFactor;
 
 /** Timers variables */
 static unsigned long referenceReady;
@@ -62,18 +69,24 @@ static float mapfloat(long x, long fromLow, long fromHigh, float toLow, float to
  * is "PLAY" the parameters are updated incrementally, otherwise are reset.
  */
 static void updateGameParameters() {
-    ballPosition = 0;
+    int speedReduction;
+    ballPosition = STARTING_BALL_POS;
     ballDirection = RIGHT;
+    // NOTE: t1 is measured in ms.
     t1 = ((random() % RAND_MAX_TIME) + RAND_MIN_TIME) * 1000;
     if (gameStatus == PLAY) {
-        t2 = max(t2 / F, 30);
-        ballSpeed = max(ballSpeed - 150, 30);
+        t2 = max(t2 / reduceFactor, 0);
+        speedReduction = mapfloat(level, 1, LEVELS, 100, 500);
+        ballSpeed = max(ballSpeed - speedReduction, MIN_BALL_SPEED);
         score += 1;
+#ifdef DBG
+    printOnConsole("speedReduction: " + String(speedReduction));
+#endif
     } else {
-        t2 = 10000;
-        ballSpeed = 1000;
+        t2 = DEFAULT_T2;
+        ballSpeed = DEFAULT_BALL_SPEED;
         score = 0;
-        F = mapfloat(level, 1, LEVELS, 1.1, 3);
+        reduceFactor = mapfloat(level, 1, LEVELS, MIN_REDUCE_FACTOR, MAX_REDUCE_FACTOR);
     }
 #ifdef DBG
     printOnConsole("You have " + String(t2) + "ms to push the button");
@@ -100,8 +113,11 @@ void gameReady() {
         updateGameParameters();
     } else {
         fadeLed(LS_PIN);
+        int tmp = level;
         level = map(readPotentiometer(POT_PIN), 0, 1023, 1, LEVELS);
-        //printOnConsole("Level: " + String(level));    // TODO: ASCII art
+        if (level != tmp) {
+            printOnConsole("Level: " + String(level));
+        }
     }
 }
 
@@ -153,8 +169,10 @@ void sleep() {
 }
 
 void gameOver() {
+    disableInterruptsOnButtons();
     turnOffLeds();
     printOnConsole("Game Over. Final Score: " + String(score));
     delay(10000);   // TODO avoid magic numbers
     gameStatus = SETUP;
+    enableInterruptsOnButtons();
 }
