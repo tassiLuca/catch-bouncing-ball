@@ -2,7 +2,7 @@
 #define __GAME_H__
 
 /**
- * 
+ * An enum describing the states of the game.
  */
 typedef enum {
     SETUP,
@@ -13,31 +13,41 @@ typedef enum {
     SLEEP
 } GameStatus;
 
+/** 
+ * A global variable which describes the current state of the game .
+ */
 extern GameStatus gameStatus;
 
 /**
- * Init the game. Print a welcome message.
+ * Init the game. Prints a welcome message.
  */
 void welcome();
 
 /**
- * The game is ready to play.
+ * Waits for the user pression of the first button in order to start
+ * the game. If, after a reasonable amount of time nothing happens, 
+ * the system goes in deep sleeping.
  */
 void gameReady();
 
-
+/** 
+ * The ball moves repeatedly back and forth for a fixed amount of time.
+ */
 void gameBlink();
 
 /**
- * The game starts!
+ * Implements the game logic.
  */
 void gamePlay();
 
 /** 
- * Go in sleep.
+ * Put the system in deep sleeping.
  */
 void sleep();
 
+/**
+ * The play is finished. Prints a message with the score.
+ */
 void gameOver();
 
 #endif
