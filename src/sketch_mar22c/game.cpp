@@ -4,9 +4,14 @@
 #include "input.h"
 
 #define TIMEOUT_READY 10000
-#define RAND_MIN 3
-#define RAND_MAX 10
+#define RAND_MIN_TIME 3
+#define RAND_MAX_TIME 10
 #define LEVELS 8
+
+typedef enum {
+    RIGHT = 1,
+    LEFT = -1
+} BallDirection;
 
 /* Game parameters */
 GameStatus gameStatus;
@@ -25,14 +30,13 @@ static unsigned long referenceBlink;
 static unsigned long referenceBlinkLed;
 static unsigned long referencePlay;
 
-static float mapfloat(long x, long in_min, long in_max, float out_min, float out_max)
-{
+static float mapfloat(long x, long in_min, long in_max, float out_min, float out_max) {
   return (float)(x - in_min) * (out_max - out_min) / (float)(in_max - in_min) + out_min;
 }
 
 static void resetGameParameters() {
     score = 0;
-    t1 = ((random() % RAND_MAX) + RAND_MIN) * 1000;
+    t1 = ((random() % RAND_MAX_TIME) + RAND_MIN_TIME) * 1000;
     t2 = 10000;
     S = 1000;
     F = mapfloat(level, 1, LEVELS, 1.1, 3);
@@ -46,7 +50,7 @@ static void resetGameParameters() {
 
 static void updateGameParameters() {
     score += 1;
-    t1 = ((random() % RAND_MAX) + RAND_MIN) * 1000;
+    t1 = ((random() % RAND_MAX_TIME) + RAND_MIN_TIME) * 1000;
     t2 = max(t2 / F, 30);
     S = max(S - 150, 30); 
 #ifdef DBG

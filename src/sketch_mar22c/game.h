@@ -13,11 +13,6 @@ typedef enum {
     SLEEP
 } GameStatus;
 
-typedef enum {
-    RIGHT = 1,
-    LEFT = -1
-} BallDirection;
-
 /**
  * Init the game. Print a welcome message.
  */
