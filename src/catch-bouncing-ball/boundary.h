@@ -1,12 +1,19 @@
-#ifndef __INPUT_H__
-#define __INPUT_H__
+#ifndef __BOUNDARY_H__
+#define __BOUNDARY_H__
 
 /**
  * Initialize all the components of the system.
  */
 void initSystem();
 
+/**
+ * Enables the buttons interrupts handlers.
+ */
 void enableInterruptsOnButtons();
+
+/**
+ * Disables the buttons interrupts handlers.
+ */
 void disableInterruptsOnButtons();
 
 /**
@@ -46,6 +53,9 @@ int isButtonPressed();
  */
 int readPotentiometer(int pinPot);
 
+/**
+ * Put the system in deep sleeping.
+ */
 void deepSleepSystem();
 
 #endif

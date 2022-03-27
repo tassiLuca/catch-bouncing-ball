@@ -1,5 +1,5 @@
 #include "setup.h"
-#include "input.h"
+#include "boundary.h"
 #include "game.h"
 
 void setup() {

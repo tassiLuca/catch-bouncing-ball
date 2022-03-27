@@ -2,12 +2,8 @@
 #define EI_ARDUINO_INTERRUPTED_PIN
 #include <EnableInterrupt.h>
 #include <avr/sleep.h>
-
 #include "setup.h"
-#include "input.h"
-
-// TODO LIST
-// - rename this file and the header one in boundary.h/c
+#include "boundary.h"
 
 /**
  * The debounce time. This value is hardware-dependent and must be 
