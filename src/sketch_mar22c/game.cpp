@@ -76,6 +76,7 @@ void gameReady() {
         turnOffLeds();
         printOnConsole("Go!");
         gameStatus = BLINK;
+        disableInterruptsOnButtons();
         referenceBlink = millis();
         referenceBlinkLed = millis();
         updateGameParameters();
@@ -96,8 +97,6 @@ void updateDirection() {
 
 void gameBlink() {
     if (millis() - referenceBlink <= t1) {
-        // if the user push a button during the blinking it is not considered!
-        isButtonPressed();
         if (millis() - referenceBlinkLed > S) {
             turnOffLed(leds[ballPosition]);
             updateDirection();
@@ -108,6 +107,7 @@ void gameBlink() {
         }
     } else {
         gameStatus = PLAY;
+        enableInterruptsOnButtons();
         referencePlay = millis();
     }
 }
@@ -121,6 +121,7 @@ void gamePlay() {
         printOnConsole("New point! Score:" + String(score));
         turnOffLeds();
         gameStatus = BLINK;
+        disableInterruptsOnButtons();
         referenceBlink = millis();
         referenceBlinkLed = millis();
     }

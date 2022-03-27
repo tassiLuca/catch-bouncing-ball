@@ -65,14 +65,25 @@ void initSystem() {
     //        see [https://docs.arduino.cc/tutorials/generic/digital-input-pullup]
     for (int i = 0; i < BUTTONS_LEN; i++) {
         pinMode(buttons[i], INPUT_PULLUP);
-        enableInterrupt(buttons[i], buttonPressed, FALLING);
     }
+    enableInterruptsOnButtons();
     for (int i = 0; i < LEDS_LEN; i++) {
         pinMode(leds[i], OUTPUT);
     }
 #ifdef DBG
     printOnConsole(">>> ACTIVE THE DEBUG MODE: MAX LEVEL OF VERBOSITY <<<");
 #endif
+}
+
+void enableInterruptsOnButtons() {
+    for (int i = 0; i < BUTTONS_LEN; i++) {
+        enableInterrupt(buttons[i], buttonPressed, FALLING);
+    }
+}
+void disableInterruptsOnButtons() {
+    for (int i = 0; i < BUTTONS_LEN; i++) {
+        disableInterrupt(buttons[i]);
+    }    
 }
 
 int readPotentiometer(int pinPot) {

@@ -6,6 +6,9 @@
  */
 void initSystem();
 
+void enableInterruptsOnButtons();
+void disableInterruptsOnButtons();
+
 /**
  * Print on the console the message given in input.
  */
