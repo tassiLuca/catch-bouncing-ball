@@ -34,31 +34,27 @@ static float mapfloat(long x, long in_min, long in_max, float out_min, float out
   return (float)(x - in_min) * (out_max - out_min) / (float)(in_max - in_min) + out_min;
 }
 
-static void resetGameParameters() {
-    score = 0;
-    t1 = ((random() % RAND_MAX_TIME) + RAND_MIN_TIME) * 1000;
-    t2 = 10000;
-    S = 1000;
-    F = mapfloat(level, 1, LEVELS, 1.1, 3);
-    ballPosition = 0;
-    ballDirection = RIGHT;
-#ifdef DBG
-    printOnConsole("The difficulty level is " + String(level));
-    printOnConsole("The factor F is " + String(F));
-#endif
+static int scoreStrategy() {
+    return 1;
 }
 
 static void updateGameParameters() {
-    score += 1;
-    t1 = ((random() % RAND_MAX_TIME) + RAND_MIN_TIME) * 1000;
-    t2 = max(t2 / F, 30);
-    S = max(S - 150, 30); 
-#ifdef DBG
-    printOnConsole("The speed of the led is " + String(S));
-    printOnConsole("You have " + String(t2) + " ms to push a button");
-#endif
     ballPosition = 0;
     ballDirection = RIGHT;
+    t1 = ((random() % RAND_MAX_TIME) + RAND_MIN_TIME) * 1000;
+    if (gameStatus == PLAY) {
+        t2 = max(t2 / F, 30);
+        S = max(S - 150, 30);
+        score += 1;
+    } else {
+        t2 = 10000;
+        S = 1000;
+        score = 0;
+        F = mapfloat(level, 1, LEVELS, 1.1, 3);
+    }
+#ifdef DBG
+    printOnConsole("You have " + String(t2) + "msecs");
+#endif
 }
 
 void welcome() {
@@ -82,7 +78,7 @@ void gameReady() {
         gameStatus = BLINK;
         referenceBlink = millis();
         referenceBlinkLed = millis();
-        resetGameParameters();
+        updateGameParameters();
     } else {
         fadeLed(LS_PIN);
         level = map(readPotentiometer(POT_PIN), 0, 1023, 1, LEVELS);
