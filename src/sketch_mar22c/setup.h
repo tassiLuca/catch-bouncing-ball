@@ -1,8 +1,7 @@
 #ifndef __SETUP_H__
 #define __SETUP_H__
 
-// When the following is defined logging 
-// messages are print on the console line.
+// When the following is defined logging messages are print on the console line.
 #define DBG 1
 
 #define L1_PIN 2
@@ -19,7 +18,7 @@
 
 extern int buttons[];
 extern int leds[];
-// TODO sizeof doesn't work
+
 #define BUTTONS_LEN 4
 #define LEDS_LEN 5
 
