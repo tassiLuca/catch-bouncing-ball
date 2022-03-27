@@ -1,7 +1,7 @@
 #include "Arduino.h"
 #include "setup.h"
 #include "game.h"
-#include "input.h"
+#include "boundary.h"
 
 /** The fixed amount of time which the user has to begin 
  *  the play game before the system goes in deep sleeping. */
@@ -103,7 +103,7 @@ void welcome() {
 void gameReady() {
     if (millis() - referenceReady > TIMEOUT_READY) {
         gameStatus = SLEEP;
-    } else if (isButtonPressed() == 0) { // T1 has been pressed => TODO: improve
+    } else if (getButtonPressed() == 0) { // T1 has been pressed => TODO: improve
         turnOffLeds();
         printOnConsole("Go!");
         gameStatus = BLINK;
@@ -147,7 +147,7 @@ void gameBlink() {
 }
 
 void gamePlay() {
-    long btnPressed = isButtonPressed();
+    long btnPressed = getButtonPressed();
     if (millis() - referencePlay > t2 || (btnPressed != -1 && btnPressed != ballPosition)) {
         gameStatus = OVER;
     } else if (btnPressed == ballPosition) {

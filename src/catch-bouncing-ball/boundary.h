@@ -45,7 +45,7 @@ void fadeLed(int pinLed);
  *  Returns the number of the button pressed or -1 if 
  *  no button have been pressed.
  */
-int isButtonPressed();
+int getButtonPressed();
 
 /**
  * Returns a value in [0, 1023] corresponding to the analog

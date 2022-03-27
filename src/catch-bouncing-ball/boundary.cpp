@@ -114,7 +114,7 @@ void fadeLed(int pinLed) {
     delay(5);
 }
 
-int isButtonPressed() {
+int getButtonPressed() {
     // [NOTE] To avoid race conditions disable interrupts.
     noInterrupts();
     int tmp = pressedBtn;
