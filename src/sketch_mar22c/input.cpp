@@ -47,10 +47,11 @@ static int getIndexOfButton(int btnPin) {
 // TODO: flag to disable in soft way interrupts when not needed or disable it via detachInterrupt(): 
 // see [https://www.arduino.cc/reference/it/language/functions/external-interrupts/detachinterrupt/]
 static void buttonPressed() {
-    pressedBtn = getIndexOfButton(arduinoInterruptedPin);
+    int btnIdx = getIndexOfButton(arduinoInterruptedPin);
     unsigned long now = millis();
-    if (pressedBtn != -1 && now - lastDebounceTime[pressedBtn] > BOUNCING_TIME) {
-        lastDebounceTime[pressedBtn] = now;
+    if (btnIdx != -1 && now - lastDebounceTime[btnIdx] > BOUNCING_TIME) {
+        lastDebounceTime[btnIdx] = now;
+        pressedBtn = btnIdx;
 #ifdef DBG
         printOnConsole("Button pressed: " + String(pressedBtn));
 #endif
