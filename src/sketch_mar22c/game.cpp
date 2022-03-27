@@ -3,52 +3,75 @@
 #include "game.h"
 #include "input.h"
 
+/** The fixed amount of time which the user has to begin 
+ *  the play game before the system goes in deep sleeping. */
 #define TIMEOUT_READY 10000
+/** The following are the minimum and maximum value of random 
+ *  time T1 in which the ball moves repeatedly back and forth. */
 #define RAND_MIN_TIME 3
 #define RAND_MAX_TIME 10
+/**  The number of levels difficulties. */
 #define LEVELS 8
 
+#define WELCOME_MSG "************************************************ \n" \
+                    "Welcome to the Catch the Bouncing Led Ball Game. \n" \
+                    "Press Key T1 to Start. \n"                           \
+                    "************************************************ \n"
+/** An enum describing the two possible directions where the ball can moves. */
 typedef enum {
     RIGHT = 1,
     LEFT = -1
 } BallDirection;
 
-/* Game parameters */
+/** The current game status. */
 GameStatus gameStatus;
+/** The current direction of the ball towards which it is moving. */
 static BallDirection ballDirection;
+/** The speed of the ball. */
+static int ballSpeed;
+/** The current position of the ball (actually, the led ton which is on). */
 static int ballPosition;
+/** The current difficulty level. */
 static int level;
+/** The actual game score. */
 static int score;
+/** The amount of time in which the ball moves repeatedly back and forth. */
 static int t1;
+/** The amount of time within which the user must press 
+ *  a button before the game ends. */
 static int t2;
-static int S;
+/** The factor to reduce T2 for each turn of play. */
 static float F;
 
-/* Timers variables */
+/** Timers variables */
 static unsigned long referenceReady;
 static unsigned long referenceBlink;
 static unsigned long referenceBlinkLed;
 static unsigned long referencePlay;
 
-static float mapfloat(long x, long in_min, long in_max, float out_min, float out_max) {
-  return (float)(x - in_min) * (out_max - out_min) / (float)(in_max - in_min) + out_min;
+/**
+ * Re-maps a number from one range to another, like map() does but returning a 
+ * floating value.
+ */
+static float mapfloat(long x, long fromLow, long fromHigh, float toLow, float toHigh) {
+  return (float)(x - fromLow) * (toHigh - toLow) / (float)(fromHigh - fromLow) + toLow;
 }
 
-static int scoreStrategy() {
-    return 1;
-}
-
+/**
+ * Updates the game parameters according to the current game status: if it
+ * is "PLAY" the parameters are updated incrementally, otherwise are reset.
+ */
 static void updateGameParameters() {
     ballPosition = 0;
     ballDirection = RIGHT;
     t1 = ((random() % RAND_MAX_TIME) + RAND_MIN_TIME) * 1000;
     if (gameStatus == PLAY) {
         t2 = max(t2 / F, 30);
-        S = max(S - 150, 30);
-        score += scoreStrategy();
+        ballSpeed = max(ballSpeed - 150, 30);
+        score += 1;
     } else {
         t2 = 10000;
-        S = 1000;
+        ballSpeed = 1000;
         score = 0;
         F = mapfloat(level, 1, LEVELS, 1.1, 3);
     }
@@ -58,13 +81,8 @@ static void updateGameParameters() {
 }
 
 void welcome() {
-    const String welcomeMsg = 
-        "************************************************ \n"
-        "Welcome to the Catch the Bouncing Led Ball Game. \n"
-        "Press Key T1 to Start. \n"
-        "************************************************ \n";
     turnOffLeds();
-    printOnConsole(welcomeMsg);
+    printOnConsole(WELCOME_MSG);
     gameStatus = READY;
     referenceReady = millis();
 }
@@ -97,7 +115,7 @@ void updateDirection() {
 
 void gameBlink() {
     if (millis() - referenceBlink <= t1) {
-        if (millis() - referenceBlinkLed > S) {
+        if (millis() - referenceBlinkLed > ballSpeed) {
             turnOffLed(leds[ballPosition]);
             updateDirection();
             ballPosition += ballDirection;
