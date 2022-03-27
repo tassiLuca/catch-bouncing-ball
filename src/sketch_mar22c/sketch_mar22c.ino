@@ -2,8 +2,6 @@
 #include "input.h"
 #include "game.h"
 
-extern GameStatus gameStatus;
-
 void setup() {
     initSystem();
     gameStatus = SETUP;

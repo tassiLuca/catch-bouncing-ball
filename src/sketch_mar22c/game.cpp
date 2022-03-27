@@ -45,7 +45,7 @@ static void updateGameParameters() {
     if (gameStatus == PLAY) {
         t2 = max(t2 / F, 30);
         S = max(S - 150, 30);
-        score += 1;
+        score += scoreStrategy();
     } else {
         t2 = 10000;
         S = 1000;
@@ -96,6 +96,8 @@ void updateDirection() {
 
 void gameBlink() {
     if (millis() - referenceBlink <= t1) {
+        // if the user push a button during the blinking it is not considered!
+        isButtonPressed();
         if (millis() - referenceBlinkLed > S) {
             turnOffLed(leds[ballPosition]);
             updateDirection();

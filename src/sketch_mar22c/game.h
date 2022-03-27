@@ -13,6 +13,8 @@ typedef enum {
     SLEEP
 } GameStatus;
 
+extern GameStatus gameStatus;
+
 /**
  * Init the game. Print a welcome message.
  */
