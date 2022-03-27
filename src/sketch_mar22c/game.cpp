@@ -112,20 +112,15 @@ void gameBlink() {
 
 void gamePlay() {
     long btnPressed = isButtonPressed();
-    // TODO: semplify ?
-    if (millis() - referencePlay <= t2) {
-        if (btnPressed == ballPosition) {
-            printOnConsole("New point! Score:" + String(score));
-            turnOffLeds();
-            updateGameParameters();
-            gameStatus = BLINK;
-            referenceBlink = millis();
-            referenceBlinkLed = millis();
-        } else if (btnPressed != -1 && btnPressed != ballPosition) {
-            gameStatus = OVER;
-        }
-    } else {
+    if (millis() - referencePlay > t2 || (btnPressed != -1 && btnPressed != ballPosition)) {
         gameStatus = OVER;
+    } else if (btnPressed == ballPosition) {
+        printOnConsole("New point! Score:" + String(score));
+        turnOffLeds();
+        updateGameParameters();
+        gameStatus = BLINK;
+        referenceBlink = millis();
+        referenceBlinkLed = millis();
     }
 }
 
