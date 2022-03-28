@@ -1,15 +1,18 @@
 #include "Arduino.h"
+#include <math.h>
 #include "setup.h"
 #include "game.h"
 #include "boundary.h"
+
+#define REDUCE_FACTOR(x) log((x))
 
 /** The fixed amount of time which the user has to begin 
  *  the play game before the system goes in deep sleeping. */
 #define TIMEOUT_READY 10000
 /** The following are the minimum and maximum value of random 
  *  time T1 in which the ball moves repeatedly back and forth. */
-#define RAND_MIN_TIME 3
-#define RAND_MAX_TIME 10
+#define RAND_MIN_TIME 2
+#define RAND_MAX_TIME 8
 /** The number of levels difficulties. */
 #define LEVELS 8
 /** The default ball starting position. */
@@ -19,7 +22,7 @@
 #define DEFAULT_BALL_SPEED 1000
 /** The minimum and maximum values for the reduce factor. */
 #define MIN_REDUCE_FACTOR 1.1
-#define MAX_REDUCE_FACTOR 3.0
+#define MAX_REDUCE_FACTOR 2.0
 /** The default amount of time for t2. */
 #define DEFAULT_T2 10000
 #define WELCOME_MSG "************************************************ \n" \
@@ -71,27 +74,22 @@ static float mapfloat(long x, long fromLow, long fromHigh, float toLow, float to
  * is "PLAY" the parameters are updated incrementally, otherwise are reset.
  */
 static void updateGameParameters() {
-    int speedReduction;
     ballPosition = STARTING_BALL_POS;
     ballDirection = RIGHT;
     // NOTE: t1 is measured in ms.
     t1 = ((random() % RAND_MAX_TIME) + RAND_MIN_TIME) * 1000;
-    if (gameStatus == PLAY) {
+    if (gameStatus == PLAY) {   // update the parameters
         t2 = max(t2 / reduceFactor, 0);
-        speedReduction = mapfloat(level, 1, LEVELS, 100, 500);
-        ballSpeed = max(ballSpeed - speedReduction, MIN_BALL_SPEED);
+        ballSpeed = max(ballSpeed / REDUCE_FACTOR(level), MIN_BALL_SPEED);
         score += 1;
-#ifdef DBG
-    printOnConsole("speedReduction: " + String(speedReduction));
-#endif
-    } else {
+    } else {    // reset the paramaters
         t2 = DEFAULT_T2;
         ballSpeed = DEFAULT_BALL_SPEED;
         score = 0;
         reduceFactor = mapfloat(level, 1, LEVELS, MIN_REDUCE_FACTOR, MAX_REDUCE_FACTOR);
     }
 #ifdef DBG
-    printOnConsole("You have " + String(t2) + "ms to push the button");
+    printOnConsole("You have " + String(t2) + "ms to push the correct button");
 #endif
 }
 
