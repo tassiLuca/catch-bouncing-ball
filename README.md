@@ -1,6 +1,5 @@
 # Catch the Bouncing Led Ball
 
-[![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 
@@ -23,11 +22,10 @@ In `doc` folders you can find the system requirements and the breadboard circuit
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: 
-[contributors-url]: https://github.com/tassiLuca/catch-bouncing-ball/graphs/contributors
 
-[forks-shield]: 
+
+[forks-shield]: https://img.shields.io/github/forks/tassiLuca/catch-bouncing-ball?style=flat-square
 [forks-url]: https://github.com/tassiLuca/catch-bouncing-ball/network/members
 
-[stars-shield]: 
+[stars-shield]: https://img.shields.io/github/stars/tassiLuca/catch-bouncing-ball?style=flat-square
 [stars-url]: https://github.com/tassiLuca/catch-bouncing-ball/stargazers
