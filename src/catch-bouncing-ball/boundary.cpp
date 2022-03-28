@@ -74,6 +74,7 @@ void enableInterruptsOnButtons() {
         enableInterrupt(buttons[i], buttonPressed, FALLING);
     }
 }
+
 void disableInterruptsOnButtons() {
     for (int i = 0; i < BUTTONS_LEN; i++) {
         disableInterrupt(buttons[i]);
@@ -87,6 +88,18 @@ int readPotentiometer(int pinPot) {
 void printOnConsole(String msg) {
     Serial.println(msg);
     Serial.flush();
+}
+
+void printLevel(int level, int maxLevel) {
+    Serial.print("[");
+    for (int i = 0; i < level; i++) {
+        Serial.print("=");
+    }
+    Serial.print(">");
+    for (int i = 0; i < maxLevel - level; i++) {
+        Serial.print(" ");
+    }
+    Serial.println("] Level: " + String(level));
 }
 
 void turnOffLeds() {

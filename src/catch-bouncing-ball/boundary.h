@@ -21,6 +21,8 @@ void disableInterruptsOnButtons();
  */
 void printOnConsole(String msg);
 
+void printLevel(int level, int maxLevels);
+
 /**
  * Turns off all the leds of the circuit.
  */

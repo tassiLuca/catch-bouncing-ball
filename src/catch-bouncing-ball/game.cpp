@@ -4,6 +4,7 @@
 #include "game.h"
 #include "boundary.h"
 
+/** The function which determines the speed reduce factor. */
 #define REDUCE_FACTOR(x) log((x))
 
 /** The fixed amount of time which the user has to begin the play game before 
@@ -60,17 +61,29 @@ static unsigned long reference;
 static unsigned long referenceBlinkLed;
 
 /**
- * Re-maps a number from one range to another, like map() does but returning a 
- * floating value.
+ * Re-maps a number from one range to another, like map() does but returning a floating value.
  */
 static float mapfloat(long x, long fromLow, long fromHigh, float toLow, float toHigh) {
   return (float)(x - fromLow) * (toHigh - toLow) / (float)(fromHigh - fromLow) + toLow;
 }
 
+/**
+ * Change the game status, resets timers variables and, on OVER and BLINK
+ * states, disables buttons interrupts: this is necessary to avoid in the
+ * following checks are considered not useful pressions.
+ */
 static void changeGameStatus(GameStatus newStatus) {
+    static bool interruptsDisabled = false;
     gameStatus = newStatus;
     reference = millis();
     referenceBlinkLed = millis();
+    if (newStatus == BLINK || newStatus == OVER) {
+        disableInterruptsOnButtons();
+        interruptsDisabled = true;
+    } else if (interruptsDisabled) {
+        enableInterruptsOnButtons();
+        interruptsDisabled = false;
+    }
 }
 
 /**
@@ -80,13 +93,13 @@ static void changeGameStatus(GameStatus newStatus) {
 static void updateGameParameters() {
     ballPosition = STARTING_BALL_POS;
     ballDirection = RIGHT;
-    // NOTE: t1 is measured in ms.
+    // [NOTE] t1 is measured in ms.
     t1 = ((random() % RAND_MAX_TIME) + RAND_MIN_TIME) * 1000;
-    if (gameStatus == PLAY) {   // update the parameters
+    if (gameStatus == PLAY) { // update the parameters
         t2 = max(t2 / reduceFactor, 0);
         ballSpeed = max(ballSpeed / REDUCE_FACTOR(level), MIN_BALL_SPEED);
         score += 1;
-    } else {    // reset the paramaters
+    } else { // reset the paramaters
         t2 = DEFAULT_T2;
         ballSpeed = DEFAULT_BALL_SPEED;
         score = 0;
@@ -100,26 +113,27 @@ static void updateGameParameters() {
 void welcome() {
     turnOffLeds();
     printOnConsole(WELCOME_MSG);
-    gameStatus = READY;
-    reference = millis();
+    changeGameStatus(READY);
 }
 
 void gameReady() {
     if (millis() - reference > TIMEOUT) {
-        gameStatus = SLEEP;
+        changeGameStatus(SLEEP);
     } else if (getButtonPressed() == 0) {
         turnOffLeds();
-        printOnConsole("Go!");
+        printOnConsole("=> Go!");
         changeGameStatus(BLINK);
-        disableInterruptsOnButtons();
         updateGameParameters();
     } else {
         fadeLed(LS_PIN);
-        // TO DO BETTER
         int tmp = level;
-        level = map(readPotentiometer(POT_PIN), 0, 1023, 1, LEVELS);
+        // [NOTE] Please note the fromHigh and toHigh are augmented by 1 unit
+        //        to maps [0, 1023] onto [1, 8] evenly distributed, 
+        //        avoiding only 1023 is mapped into LEVELS value!
+        // See [https://create.arduino.cc/projecthub/dhorton668/a-better-mapping-with-map-dd66f5?ref=part&ref_id=8233&offset=5]
+        level = map(readPotentiometer(POT_PIN), 0, 1024, 1, LEVELS + 1);
         if (level != tmp) {
-            printOnConsole("Level: " + String(level));
+            printLevel(level, LEVELS);
         }
     }
 }
@@ -133,8 +147,8 @@ void updateDirection() {
 }
 
 void gameBlink() {
-    if (millis() - reference <= t1) {
-        if (millis() - referenceBlinkLed > ballSpeed) {
+    if (millis() - reference <= (unsigned) t1) {
+        if (millis() - referenceBlinkLed > (unsigned) ballSpeed) {
             turnOffLed(leds[ballPosition]);
             updateDirection();
             ballPosition += ballDirection;
@@ -144,23 +158,20 @@ void gameBlink() {
         }
     } else {
         changeGameStatus(PLAY);
-        enableInterruptsOnButtons();
     }
 }
 
 void gamePlay() {
     long btnPressed = getButtonPressed();
-    if (millis() - reference > t2 || (btnPressed != -1 && btnPressed != ballPosition)) {
+    if (millis() - reference > (unsigned) t2 || (btnPressed != -1 && btnPressed != ballPosition)) {
         turnOffLeds();
         printOnConsole("Game Over. Final Score: " + String(score));
         changeGameStatus(OVER);
-        disableInterruptsOnButtons();
     } else if (btnPressed == ballPosition) {
         updateGameParameters();
         printOnConsole("New point! Score:" + String(score));
         turnOffLeds();
         changeGameStatus(BLINK);
-        disableInterruptsOnButtons();
     }
 }
 
@@ -168,12 +179,11 @@ void sleep() {
     turnOffLeds();
     printOnConsole("Sleep!");
     deepSleepSystem();
-    gameStatus = SETUP;
+    changeGameStatus(SETUP);
 }
 
 void gameOver() {
     if (millis() - reference > TIMEOUT) {
-        gameStatus = SETUP;
-        enableInterruptsOnButtons();
+        changeGameStatus(SETUP);
     }
 }
