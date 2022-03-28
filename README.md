@@ -9,3 +9,6 @@ the ball stops in some position P and the user playing the game has T2 time to p
 button within time T2, it gets one point augmenting the score, and the game goes on – augmenting the speed S and reducing the time T2 of 
 a factor F. If the player does not press the button on time, the game is over.
 
+## More infos
+[Here]() you can find a short video demonstrating the system
+In `doc` folders you can find the system requirements and the breadboard circuit schemas.
