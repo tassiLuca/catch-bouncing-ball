@@ -2,7 +2,7 @@
 #define __SETUP_H__
 
 // When the following is defined logging messages are print on the console line.
-#define DBG 1
+// #define DBG 1
 
 /**
  * Led pins.

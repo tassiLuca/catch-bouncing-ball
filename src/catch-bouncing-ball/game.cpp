@@ -26,7 +26,7 @@
 #define WELCOME_MSG "************************************************ \n" \
                     "Welcome to the Catch the Bouncing Led Ball Game. \n" \
                     "Press Key T1 to Start. \n"                           \
-                    "************************************************ \n"
+                    "************************************************"
 
 /** The function which determines the speed reduce factor. */
 #define REDUCE_FACTOR(x) (log10((x)) + MIN_REDUCE_FACTOR)
