@@ -10,20 +10,23 @@
  *  time T1 in which the ball moves repeatedly back and forth. */
 #define RAND_MIN_TIME 3
 #define RAND_MAX_TIME 10
-/**  The number of levels difficulties. */
+/** The number of levels difficulties. */
 #define LEVELS 8
-
+/** The default ball starting position. */
 #define STARTING_BALL_POS 0
+/** The minimum ball speed the ball can reach and the default one. */
 #define MIN_BALL_SPEED 30
+#define DEFAULT_BALL_SPEED 1000
+/** The minimum and maximum values for the reduce factor. */
 #define MIN_REDUCE_FACTOR 1.1
 #define MAX_REDUCE_FACTOR 3.0
-#define DEFAULT_BALL_SPEED 1000
+/** The default amount of time for t2. */
 #define DEFAULT_T2 10000
-
 #define WELCOME_MSG "************************************************ \n" \
                     "Welcome to the Catch the Bouncing Led Ball Game. \n" \
                     "Press Key T1 to Start. \n"                           \
                     "************************************************ \n"
+                    
 /** An enum describing the two possible directions where the ball can moves. */
 typedef enum {
     RIGHT = 1,
@@ -44,8 +47,7 @@ static int level;
 static int score;
 /** The amount of time, in ms, in which the ball moves repeatedly back and forth. */
 static int t1;
-/** The amount of time, in ms, within which the user must press 
- *  a button before the game ends. */
+/** The amount of time, in ms, within which the user must press a button before the game ends. */
 static int t2;
 /** The factor to reduce T2 for each turn of play. */
 static float reduceFactor;
@@ -103,7 +105,7 @@ void welcome() {
 void gameReady() {
     if (millis() - referenceReady > TIMEOUT_READY) {
         gameStatus = SLEEP;
-    } else if (getButtonPressed() == 0) { // T1 has been pressed => TODO: improve
+    } else if (getButtonPressed() == 0) {
         turnOffLeds();
         printOnConsole("Go!");
         gameStatus = BLINK;
