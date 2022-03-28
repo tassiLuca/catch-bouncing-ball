@@ -4,7 +4,7 @@
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 
-This is the first assignment for the Embedded System and IoT course for the Computer Science and Engineering @ UniBO.
+This is the first assignment for the Embedded System and IoT course of the Computer Science and Engineering Bachelor Degree @ UniBO.
 
 ## Project overview
 The game board is based on 4 green leds L1, L2, L3, L4 and red led LS, four tactile buttons T1, T2, T3, T4 and a potentiometer Pot.
@@ -22,6 +22,7 @@ a factor F. If the player does not press the button on time, the game is over.
 In `doc` folders you can find the system requirements and the breadboard circuit schemas.
 
 <!-- MARKDOWN LINKS & IMAGES -->
+<!-- https://shields.io -->
 [contributors-shield]: https://img.shields.io/github/contributors/tassiLuca/catch-bouncing-ball?style=flat-square
 [contributors-url]: https://github.com/tassiLuca/catch-bouncing-ball/graphs/contributors
 

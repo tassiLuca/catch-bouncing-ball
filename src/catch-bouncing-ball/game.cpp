@@ -4,9 +4,6 @@
 #include "game.h"
 #include "boundary.h"
 
-/** The function which determines the speed reduce factor. */
-#define REDUCE_FACTOR(x) log((x))
-
 /** The fixed amount of time which the user has to begin the play game before 
  *  the system goes in deep sleeping and the one after the game over to re-start it. */
 #define TIMEOUT 10000
@@ -19,7 +16,7 @@
 /** The default ball starting position. */
 #define STARTING_BALL_POS 0
 /** The minimum ball speed the ball can reach and the default one. */
-#define MIN_BALL_SPEED 30
+#define MIN_BALL_SPEED 15
 #define DEFAULT_BALL_SPEED 1000
 /** The minimum and maximum values for the reduce factor. */
 #define MIN_REDUCE_FACTOR 1.1
@@ -30,6 +27,9 @@
                     "Welcome to the Catch the Bouncing Led Ball Game. \n" \
                     "Press Key T1 to Start. \n"                           \
                     "************************************************ \n"
+
+/** The function which determines the speed reduce factor. */
+#define REDUCE_FACTOR(x) (log10((x)) + MIN_REDUCE_FACTOR)
                     
 /** An enum describing the two possible directions where the ball can moves. */
 typedef enum {

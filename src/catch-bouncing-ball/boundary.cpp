@@ -9,7 +9,7 @@
  * The debounce time. This value is hardware-dependent and must be 
  * adjusted according to the buttons quality.
  */
-#define BOUNCING_TIME 200
+#define BOUNCING_TIME 150
 
 int buttons[] = {T1_PIN, T2_PIN, T3_PIN, T4_PIN};
 int leds[]    = {L1_PIN, L2_PIN, L3_PIN, L4_PIN, LS_PIN};
