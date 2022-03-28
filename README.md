@@ -23,11 +23,11 @@ In `doc` folders you can find the system requirements and the breadboard circuit
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/alemazzo/python-java-stream.svg?style=flat-square
+[contributors-shield]: 
 [contributors-url]: https://github.com/tassiLuca/catch-bouncing-ball/graphs/contributors
 
-[forks-shield]: https://img.shields.io/github/forks/alemazzo/python-java-stream.svg?style=flat-square
+[forks-shield]: 
 [forks-url]: https://github.com/tassiLuca/catch-bouncing-ball/network/members
 
-[stars-shield]: https://img.shields.io/github/stars/alemazzo/python-java-stream.svg?style=flat-square
+[stars-shield]: 
 [stars-url]: https://github.com/tassiLuca/catch-bouncing-ball/stargazers
