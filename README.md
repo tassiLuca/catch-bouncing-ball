@@ -1,11 +1,12 @@
 # Catch the Bouncing Led Ball
 
+[![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 
 This is the first assignment for the Embedded System and IoT course for the Computer Science and Engineering @ UniBO.
 
-## Short Description
+## Project overview
 The game board is based on 4 green leds L1, L2, L3, L4 and red led LS, four tactile buttons T1, T2, T3, T4 and a potentiometer Pot.
 The green leds represent four different positions in which a virtual ball (the led ball) is positioned. A led on means that the ball is 
 in that position. During the game, the ball moves repeatedly in from L1 to L4 and back, with a speed S for some random time T1. After T1, 
@@ -21,8 +22,8 @@ a factor F. If the player does not press the button on time, the game is over.
 In `doc` folders you can find the system requirements and the breadboard circuit schemas.
 
 <!-- MARKDOWN LINKS & IMAGES -->
-<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-
+[contributors-shield]: https://img.shields.io/github/contributors/tassiLuca/catch-bouncing-ball?style=flat-square
+[contributors-url]: https://github.com/tassiLuca/catch-bouncing-ball/graphs/contributors
 
 [forks-shield]: https://img.shields.io/github/forks/tassiLuca/catch-bouncing-ball?style=flat-square
 [forks-url]: https://github.com/tassiLuca/catch-bouncing-ball/network/members
