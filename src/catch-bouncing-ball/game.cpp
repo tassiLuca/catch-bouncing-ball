@@ -6,9 +6,9 @@
 
 #define REDUCE_FACTOR(x) log((x))
 
-/** The fixed amount of time which the user has to begin 
- *  the play game before the system goes in deep sleeping. */
-#define TIMEOUT_READY 10000
+/** The fixed amount of time which the user has to begin the play game before 
+ *  the system goes in deep sleeping and the one after the game over to re-start it. */
+#define TIMEOUT 10000
 /** The following are the minimum and maximum value of random 
  *  time T1 in which the ball moves repeatedly back and forth. */
 #define RAND_MIN_TIME 2
@@ -56,10 +56,8 @@ static int t2;
 static float reduceFactor;
 
 /** Timers variables */
-static unsigned long referenceReady;
-static unsigned long referenceBlink;
+static unsigned long reference;
 static unsigned long referenceBlinkLed;
-static unsigned long referencePlay;
 
 /**
  * Re-maps a number from one range to another, like map() does but returning a 
@@ -67,6 +65,12 @@ static unsigned long referencePlay;
  */
 static float mapfloat(long x, long fromLow, long fromHigh, float toLow, float toHigh) {
   return (float)(x - fromLow) * (toHigh - toLow) / (float)(fromHigh - fromLow) + toLow;
+}
+
+static void changeGameStatus(GameStatus newStatus) {
+    gameStatus = newStatus;
+    reference = millis();
+    referenceBlinkLed = millis();
 }
 
 /**
@@ -97,22 +101,21 @@ void welcome() {
     turnOffLeds();
     printOnConsole(WELCOME_MSG);
     gameStatus = READY;
-    referenceReady = millis();
+    reference = millis();
 }
 
 void gameReady() {
-    if (millis() - referenceReady > TIMEOUT_READY) {
+    if (millis() - reference > TIMEOUT) {
         gameStatus = SLEEP;
     } else if (getButtonPressed() == 0) {
         turnOffLeds();
         printOnConsole("Go!");
-        gameStatus = BLINK;
+        changeGameStatus(BLINK);
         disableInterruptsOnButtons();
-        referenceBlink = millis();
-        referenceBlinkLed = millis();
         updateGameParameters();
     } else {
         fadeLed(LS_PIN);
+        // TO DO BETTER
         int tmp = level;
         level = map(readPotentiometer(POT_PIN), 0, 1023, 1, LEVELS);
         if (level != tmp) {
@@ -130,7 +133,7 @@ void updateDirection() {
 }
 
 void gameBlink() {
-    if (millis() - referenceBlink <= t1) {
+    if (millis() - reference <= t1) {
         if (millis() - referenceBlinkLed > ballSpeed) {
             turnOffLed(leds[ballPosition]);
             updateDirection();
@@ -140,24 +143,24 @@ void gameBlink() {
             turnOnLed(leds[ballPosition]);
         }
     } else {
-        gameStatus = PLAY;
+        changeGameStatus(PLAY);
         enableInterruptsOnButtons();
-        referencePlay = millis();
     }
 }
 
 void gamePlay() {
     long btnPressed = getButtonPressed();
-    if (millis() - referencePlay > t2 || (btnPressed != -1 && btnPressed != ballPosition)) {
-        gameStatus = OVER;
+    if (millis() - reference > t2 || (btnPressed != -1 && btnPressed != ballPosition)) {
+        turnOffLeds();
+        printOnConsole("Game Over. Final Score: " + String(score));
+        changeGameStatus(OVER);
+        disableInterruptsOnButtons();
     } else if (btnPressed == ballPosition) {
         updateGameParameters();
         printOnConsole("New point! Score:" + String(score));
         turnOffLeds();
-        gameStatus = BLINK;
+        changeGameStatus(BLINK);
         disableInterruptsOnButtons();
-        referenceBlink = millis();
-        referenceBlinkLed = millis();
     }
 }
 
@@ -169,10 +172,8 @@ void sleep() {
 }
 
 void gameOver() {
-    disableInterruptsOnButtons();
-    turnOffLeds();
-    printOnConsole("Game Over. Final Score: " + String(score));
-    delay(10000);   // TODO avoid magic numbers
-    gameStatus = SETUP;
-    enableInterruptsOnButtons();
+    if (millis() - reference > TIMEOUT) {
+        gameStatus = SETUP;
+        enableInterruptsOnButtons();
+    }
 }
