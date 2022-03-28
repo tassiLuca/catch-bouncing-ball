@@ -1,9 +1,4 @@
 # Catch the Bouncing Led Ball
-
-[![Contributors][contributors-shield]][contributors-url]
-[![Forks][forks-shield]][forks-url]
-[![Stargazers][stars-shield]][stars-url]
-
 This is the first assignment for the Embedded System and IoT course of the Computer Science and Engineering Bachelor Degree @ UniBO.
 
 ## Project overview
@@ -15,19 +10,9 @@ button within time T2, it gets one point augmenting the score, and the game goes
 a factor F. If the player does not press the button on time, the game is over.
 
 ## More infos
-[Here]() you can find a short video demonstrating the system.
+[Here](https://vimeo.com/693300376) you can find a short video demonstrating the system.
 
 [Here](https://www.tinkercad.com/things/0fTYDu71vPB) the breadboard circuit schema.
 
 In `doc` folders you can find the system requirements and the breadboard circuit schemas.
 
-<!-- MARKDOWN LINKS & IMAGES -->
-<!-- https://shields.io -->
-[contributors-shield]: https://img.shields.io/github/contributors/tassiLuca/catch-bouncing-ball?style=flat-square
-[contributors-url]: https://github.com/tassiLuca/catch-bouncing-ball/graphs/contributors
-
-[forks-shield]: https://img.shields.io/github/forks/tassiLuca/catch-bouncing-ball?style=flat-square
-[forks-url]: https://github.com/tassiLuca/catch-bouncing-ball/network/members
-
-[stars-shield]: https://img.shields.io/github/stars/tassiLuca/catch-bouncing-ball?style=flat-square
-[stars-url]: https://github.com/tassiLuca/catch-bouncing-ball/stargazers
