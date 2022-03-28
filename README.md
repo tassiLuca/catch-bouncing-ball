@@ -1,4 +1,9 @@
 # Catch the Bouncing Led Ball
+[![Contributors][contributors-shield]][contributors-url]
+[![Forks][forks-shield]][forks-url]
+[![Stargazers][stars-shield]][stars-url]
+[![Issues][issues-shield]][issues-url]
+[![MIT License][license-shield]][license-url]
 This is the first assignment for the Embedded System and IoT course for the Computer Science and Engineering @ UniBO.
 
 ## Short Description
