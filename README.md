@@ -1,9 +1,9 @@
 # Catch the Bouncing Led Ball
+
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
-[![Issues][issues-shield]][issues-url]
-[![MIT License][license-shield]][license-url]
+
 This is the first assignment for the Embedded System and IoT course for the Computer Science and Engineering @ UniBO.
 
 ## Short Description
@@ -20,3 +20,14 @@ a factor F. If the player does not press the button on time, the game is over.
 [Here](https://www.tinkercad.com/things/0fTYDu71vPB) the breadboard circuit schema.
 
 In `doc` folders you can find the system requirements and the breadboard circuit schemas.
+
+<!-- MARKDOWN LINKS & IMAGES -->
+<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+[contributors-shield]: https://img.shields.io/github/contributors/alemazzo/python-java-stream.svg?style=flat-square
+[contributors-url]: https://github.com/tassiLuca/catch-bouncing-ball/graphs/contributors
+
+[forks-shield]: https://img.shields.io/github/forks/alemazzo/python-java-stream.svg?style=flat-square
+[forks-url]: https://github.com/tassiLuca/catch-bouncing-ball/network/members
+
+[stars-shield]: https://img.shields.io/github/stars/alemazzo/python-java-stream.svg?style=flat-square
+[stars-url]: https://github.com/tassiLuca/catch-bouncing-ball/stargazers
