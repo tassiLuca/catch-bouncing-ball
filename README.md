@@ -12,4 +12,6 @@ a factor F. If the player does not press the button on time, the game is over.
 ## More infos
 [Here]() you can find a short video demonstrating the system.
 
+[Here](https://www.tinkercad.com/things/0fTYDu71vPB) the breadboard circuit schema.
+
 In `doc` folders you can find the system requirements and the breadboard circuit schemas.
