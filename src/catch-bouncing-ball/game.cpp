@@ -106,6 +106,7 @@ static void updateGameParameters() {
         reduceFactor = mapfloat(level, 1, LEVELS, MIN_REDUCE_FACTOR, MAX_REDUCE_FACTOR);
     }
 #ifdef DBG
+    printOnConsole("Ball speed " + String(ballSpeed));
     printOnConsole("You have " + String(t2) + "ms to push the correct button");
 #endif
 }
@@ -121,7 +122,7 @@ void gameReady() {
         changeGameStatus(SLEEP);
     } else if (getButtonPressed() == 0) {
         turnOffLeds();
-        printOnConsole("=> Go!");
+        printOnConsole("Go!");
         changeGameStatus(BLINK);
         updateGameParameters();
     } else {
@@ -165,7 +166,7 @@ void gamePlay() {
     long btnPressed = getButtonPressed();
     if (millis() - reference > (unsigned) t2 || (btnPressed != -1 && btnPressed != ballPosition)) {
         turnOffLeds();
-        printOnConsole("Game Over. Final Score: " + String(score));
+        printOnConsole(">>> Game Over. Final Score: " + String(score));
         changeGameStatus(OVER);
     } else if (btnPressed == ballPosition) {
         updateGameParameters();

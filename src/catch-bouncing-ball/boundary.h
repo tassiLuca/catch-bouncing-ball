@@ -21,6 +21,9 @@ void disableInterruptsOnButtons();
  */
 void printOnConsole(String msg);
 
+/**
+ * Prints in ascii art the current level.
+ */
 void printLevel(int level, int maxLevels);
 
 /**
